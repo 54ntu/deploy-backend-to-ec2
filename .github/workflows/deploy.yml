@@ -17,10 +17,10 @@ jobs:
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/backend-aws-deploy:latest .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/deploy-backend-to-ec2:latest .
 
       - name: Push Docker Image
-        run: docker push ghcr.io/${{ github.repository_owner }}/backend-aws-deploy:latest
+        run: docker push ghcr.io/${{ github.repository_owner }}/deploy-backend-to-ec2:latest
 
       # --- Deploy to EC2 ---
       - name: Deploy Docker Container on EC2
@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.EC2_USER }} # now ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ghcr.io/${{ github.repository_owner }}/backend-aws-deploy:latest
-            docker stop backend-aws-deploy || true
-            docker rm backend-aws-deploy || true
-            docker run -d --env-file /home/ubuntu/app/.env -p 3000:3000 --name backend ghcr.io/${{ github.repository_owner }}/backend-aws-deploy:latest
+            docker pull ghcr.io/${{ github.repository_owner }}/deploy-backend-to-ec2:latest
+            docker stop deploy-backend-to-ec2 || true
+            docker rm deploy-backend-to-ec2 || true
+            docker run -d --env-file /home/ubuntu/app/.env -p 3000:3000 --name backend ghcr.io/${{ github.repository_owner }}/deploy-backend-to-ec2:latest
