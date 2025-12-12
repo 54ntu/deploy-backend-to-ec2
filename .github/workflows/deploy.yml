@@ -30,7 +30,8 @@ jobs:
           username: ${{ secrets.EC2_USER }} # now ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ghcr.io/${{ github.repository_owner }}/deploy-backend-to-ec2:latest
-            docker stop deploy-backend-to-ec2 || true
-            docker rm deploy-backend-to-ec2 || true
-            docker run -d --env-file /home/ubuntu/app/.env -p 3000:3000 --name backend ghcr.io/${{ github.repository_owner }}/deploy-backend-to-ec2:latest
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker pull ghcr.io/54ntu/deploy-backend-to-ec2:latest
+            docker stop backend || true
+            docker rm backend || true
+            docker run -d --env-file /home/ubuntu/app/.env -p 3000:3000 --name backend ghcr.io/54ntu/deploy-backend-to-ec2:latest
