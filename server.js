@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const { connectDB } = require("./src/dbconfig/db");
 const app = express();
-const port = 3000;
 
 app.get("/", (req, res) => {
   res.send({
@@ -10,12 +9,22 @@ app.get("/", (req, res) => {
   });
 });
 
-connectDB()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`);
-    });
-  })
-  .catch((error) => {
-    console.error("Failed to start server:", error.message);
+app.get("/api/v1/users", (req, res) => {
+  res.send({
+    message: "user route",
   });
+});
+
+// connectDB()
+//   .then(() => {
+//     app.listen(port, () => {
+//       console.log(`Server is running on http://localhost:${port}`);
+//     });
+//   })
+//   .catch((error) => {
+//     console.error("Failed to start server:", error.message);
+//   });
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on http://localhost:${process.env.PORT}`);
+});
